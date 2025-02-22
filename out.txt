@@ -1,0 +1,185 @@
+Starting to parse nodes...
+Attempting to parse node...
+Successfully parsed node name: g002
+Successfully parsed features: 'ampere,a100,48g'
+Successfully parsed CfgTRES: cpu=64,mem=515666M,billing=197,gres/gpu=4
+Successfully parsed AllocTRES: cpu=2,mem=80G,gres/gpu=4
+Successfully parsed node: Node { node_name: "g002", gpu_type: Some(A100_48), gpu_count: 4, gpu_available: 0, cpu_count: 64, cpu_available: 62, mem_count: 504, mem_available: 424 }
+Attempting to parse node...
+Successfully parsed node name: g003
+Successfully parsed features: 'ampere,a40,48g'
+Successfully parsed CfgTRES: cpu=64,mem=515666M,billing=197,gres/gpu=4
+Successfully parsed AllocTRES: cpu=16,mem=100G,gres/gpu=4
+Successfully parsed node: Node { node_name: "g003", gpu_type: Some(A40), gpu_count: 4, gpu_available: 0, cpu_count: 64, cpu_available: 48, mem_count: 504, mem_available: 404 }
+Attempting to parse node...
+Successfully parsed node name: g004
+Successfully parsed features: 'ampere,a40,48g'
+Successfully parsed CfgTRES: cpu=64,mem=515666M,billing=197,gres/gpu=4
+Successfully parsed AllocTRES: cpu=32,mem=320G,gres/gpu=4
+Successfully parsed node: Node { node_name: "g004", gpu_type: Some(A40), gpu_count: 4, gpu_available: 0, cpu_count: 64, cpu_available: 32, mem_count: 504, mem_available: 184 }
+Attempting to parse node...
+Successfully parsed node name: g005
+Successfully parsed features: 'ampere,a40,48g'
+Successfully parsed CfgTRES: cpu=64,mem=515666M,billing=197,gres/gpu=4
+Successfully parsed AllocTRES: cpu=32,mem=320G,gres/gpu=4
+Successfully parsed node: Node { node_name: "g005", gpu_type: Some(A40), gpu_count: 4, gpu_available: 0, cpu_count: 64, cpu_available: 32, mem_count: 504, mem_available: 184 }
+Attempting to parse node...
+Successfully parsed node name: g006
+Successfully parsed features: 'ampere,a40,48g'
+Successfully parsed CfgTRES: cpu=64,mem=515666M,billing=197,gres/gpu=4
+Successfully parsed AllocTRES: cpu=32,mem=320G,gres/gpu=4
+Successfully parsed node: Node { node_name: "g006", gpu_type: Some(A40), gpu_count: 4, gpu_available: 0, cpu_count: 64, cpu_available: 32, mem_count: 504, mem_available: 184 }
+Attempting to parse node...
+Successfully parsed node name: g007
+Successfully parsed features: 'ampere,a40,48g'
+Successfully parsed CfgTRES: cpu=64,mem=515666M,billing=197,gres/gpu=4
+Successfully parsed AllocTRES: cpu=32,mem=160G,gres/gpu=4
+Successfully parsed node: Node { node_name: "g007", gpu_type: Some(A40), gpu_count: 4, gpu_available: 0, cpu_count: 64, cpu_available: 32, mem_count: 504, mem_available: 344 }
+Attempting to parse node...
+Successfully parsed node name: g008
+Successfully parsed features: 'ampere,a40,48g'
+Successfully parsed CfgTRES: cpu=64,mem=515666M,billing=197,gres/gpu=4
+Successfully parsed AllocTRES: cpu=32,mem=160G,gres/gpu=4
+Successfully parsed node: Node { node_name: "g008", gpu_type: Some(A40), gpu_count: 4, gpu_available: 0, cpu_count: 64, cpu_available: 32, mem_count: 504, mem_available: 344 }
+Attempting to parse node...
+Successfully parsed node name: g009
+Successfully parsed features: 'ampere,a40,48g'
+Successfully parsed CfgTRES: cpu=64,mem=515666M,billing=197,gres/gpu=4
+Successfully parsed AllocTRES: cpu=32,mem=160G,gres/gpu=4
+Successfully parsed node: Node { node_name: "g009", gpu_type: Some(A40), gpu_count: 4, gpu_available: 0, cpu_count: 64, cpu_available: 32, mem_count: 504, mem_available: 344 }
+Attempting to parse node...
+Successfully parsed node name: g010
+Successfully parsed features: 'ampere,a40,48g'
+Successfully parsed CfgTRES: cpu=64,mem=515666M,billing=197,gres/gpu=4
+Failed to parse AllocTRES: Error(Error { input: "\n   CapWatts=n/a\n   CurrentWatts=0 AveWatts=0\n   ExtSensorsJoules=n/s ExtSensorsWatts=0 ExtSensorsTemp=n/s", code: TakeWhile1 })
+Failed to parse node: NodeName=g010 Arch=x86_64 CoresPerSocket=32 
+   CPUAlloc=0 CPUEfctv=64 CPUTot=64 CPULoad=0.49
+   AvailableFeatures='ampere,a40,48g'
+   ActiveFeatures='ampere,a40,48g'
+   Gres=gpu:a40:4
+   NodeAddr=g010 NodeHostName=g010 Version=23.02.5
+   OS=Linux 5.15.0-127-generic #137-Ubuntu SMP Fri Nov 8 15:21:01 UTC 2024 
+   RealMemory=515666 AllocMem=0 FreeMem=288182 Sockets=1 Boards=1
+   State=IDLE ThreadsPerCore=2 TmpDisk=0 Weight=1 Owner=N/A MCS_label=N/A
+   Partitions=dev 
+   BootTime=2024-12-16T16:01:52 SlurmdStartTime=2024-12-16T16:04:24
+   LastBusyTime=2025-02-21T13:14:25 ResumeAfterTime=None
+   CfgTRES=cpu=64,mem=515666M,billing=197,gres/gpu=4
+   AllocTRES=
+   CapWatts=n/a
+   CurrentWatts=0 AveWatts=0
+   ExtSensorsJoules=n/s ExtSensorsWatts=0 ExtSensorsTemp=n/s
+Attempting to parse node...
+Successfully parsed node name: h001
+Successfully parsed features: 'ampere,a100,80g'
+Successfully parsed CfgTRES: cpu=64,mem=515666M,billing=197,gres/gpu=4
+Successfully parsed AllocTRES: cpu=32,mem=320G,gres/gpu=4
+Successfully parsed node: Node { node_name: "h001", gpu_type: Some(A100_80), gpu_count: 4, gpu_available: 0, cpu_count: 64, cpu_available: 32, mem_count: 504, mem_available: 184 }
+Attempting to parse node...
+Successfully parsed node name: h002
+Successfully parsed features: 'ampere,a100,80g'
+Successfully parsed CfgTRES: cpu=64,mem=515666M,billing=197,gres/gpu=4
+Successfully parsed AllocTRES: cpu=16,mem=32G,gres/gpu=1
+Successfully parsed node: Node { node_name: "h002", gpu_type: Some(A100_80), gpu_count: 4, gpu_available: 3, cpu_count: 64, cpu_available: 48, mem_count: 504, mem_available: 472 }
+Attempting to parse node...
+Successfully parsed node name: i001-ds
+Successfully parsed features: 'ampere,a100,80g'
+Successfully parsed CfgTRES: cpu=64,mem=515849M,billing=205,gres/gpu=8
+Successfully parsed AllocTRES: cpu=38,mem=231072M,gres/gpu=8
+Successfully parsed node: Node { node_name: "i001-ds", gpu_type: Some(A100_80), gpu_count: 8, gpu_available: 0, cpu_count: 64, cpu_available: 26, mem_count: 504, mem_available: 278 }
+Attempting to parse node...
+Successfully parsed node name: j001-ds
+Successfully parsed features: 'ampere,a100,80g'
+Successfully parsed CfgTRES: cpu=32,mem=1031932M,billing=299,gres/gpu=8
+Successfully parsed AllocTRES: cpu=22,mem=935888M,gres/gpu=8
+Successfully parsed node: Node { node_name: "j001-ds", gpu_type: Some(A100_80), gpu_count: 8, gpu_available: 0, cpu_count: 32, cpu_available: 10, mem_count: 1008, mem_available: 94 }
+Attempting to parse node...
+Successfully parsed node name: j002-ds
+Successfully parsed features: 'ampere,a100,80g'
+Successfully parsed CfgTRES: cpu=32,mem=1031932M,billing=299,gres/gpu=8
+Successfully parsed AllocTRES: cpu=18,mem=628688M,gres/gpu=7
+Successfully parsed node: Node { node_name: "j002-ds", gpu_type: Some(A100_80), gpu_count: 8, gpu_available: 1, cpu_count: 32, cpu_available: 14, mem_count: 1008, mem_available: 394 }
+Attempting to parse node...
+Successfully parsed node name: j003-ds
+Successfully parsed features: 'ampere,a100,80g'
+Successfully parsed CfgTRES: cpu=32,mem=1031932M,billing=299,gres/gpu=8
+Successfully parsed AllocTRES: cpu=17,mem=208G,gres/gpu=8
+Successfully parsed node: Node { node_name: "j003-ds", gpu_type: Some(A100_80), gpu_count: 8, gpu_available: 0, cpu_count: 32, cpu_available: 15, mem_count: 1008, mem_available: 800 }
+Attempting to parse node...
+Successfully parsed node name: j004-ds
+Successfully parsed features: 'ampere,a100,80g'
+Successfully parsed CfgTRES: cpu=32,mem=1031998M,billing=299,gres/gpu=8
+Successfully parsed AllocTRES: cpu=17,mem=208G,gres/gpu=8
+Successfully parsed node: Node { node_name: "j004-ds", gpu_type: Some(A100_80), gpu_count: 8, gpu_available: 0, cpu_count: 32, cpu_available: 15, mem_count: 1008, mem_available: 800 }
+Attempting to parse node...
+Successfully parsed node name: j005-ds
+Successfully parsed features: 'ampere,a100,80g'
+Successfully parsed CfgTRES: cpu=32,mem=1031932M,billing=299,gres/gpu=8
+Successfully parsed AllocTRES: cpu=19,mem=194072M,gres/gpu=7
+Successfully parsed node: Node { node_name: "j005-ds", gpu_type: Some(A100_80), gpu_count: 8, gpu_available: 1, cpu_count: 32, cpu_available: 13, mem_count: 1008, mem_available: 818 }
+Attempting to parse node...
+Successfully parsed node name: k001
+Successfully parsed features: 'ampere,l40s,48g'
+Successfully parsed CfgTRES: cpu=96,mem=1031642M,billing=355,gres/gpu=4
+Successfully parsed AllocTRES: cpu=32,mem=252800M,gres/gpu=4
+Successfully parsed node: Node { node_name: "k001", gpu_type: Some(L40), gpu_count: 4, gpu_available: 0, cpu_count: 96, cpu_available: 64, mem_count: 1008, mem_available: 761 }
+Attempting to parse node...
+Successfully parsed node name: k002
+Successfully parsed features: 'ampere,l40s,48g'
+Successfully parsed CfgTRES: cpu=96,mem=1031642M,billing=355,gres/gpu=4
+Successfully parsed AllocTRES: cpu=32,mem=252800M,gres/gpu=4
+Successfully parsed node: Node { node_name: "k002", gpu_type: Some(L40), gpu_count: 4, gpu_available: 0, cpu_count: 96, cpu_available: 64, mem_count: 1008, mem_available: 761 }
+Attempting to parse node...
+Successfully parsed node name: k003
+Successfully parsed features: 'ampere,l40s,48g'
+Successfully parsed CfgTRES: cpu=96,mem=1031642M,billing=355,gres/gpu=4
+Successfully parsed AllocTRES: cpu=32,mem=252800M,gres/gpu=4
+Successfully parsed node: Node { node_name: "k003", gpu_type: Some(L40), gpu_count: 4, gpu_available: 0, cpu_count: 96, cpu_available: 64, mem_count: 1008, mem_available: 761 }
+Attempting to parse node...
+Successfully parsed node name: l001
+Successfully parsed features: 'hopper,h100,80g'
+Successfully parsed CfgTRES: cpu=96,mem=1031642M,billing=355,gres/gpu=4
+Successfully parsed AllocTRES: cpu=32,mem=252800M,gres/gpu=4
+Successfully parsed node: Node { node_name: "l001", gpu_type: Some(H100), gpu_count: 4, gpu_available: 0, cpu_count: 96, cpu_available: 64, mem_count: 1008, mem_available: 761 }
+Attempting to parse node...
+Successfully parsed node name: m001
+Successfully parsed features: 'hopper,h100,80g'
+Successfully parsed CfgTRES: cpu=64,mem=1031642M,billing=323,gres/gpu=4
+Successfully parsed AllocTRES: cpu=24,mem=256G,gres/gpu=4
+Successfully parsed node: Node { node_name: "m001", gpu_type: Some(H100), gpu_count: 4, gpu_available: 0, cpu_count: 64, cpu_available: 40, mem_count: 1008, mem_available: 752 }
+Attempting to parse node...
+Successfully parsed node name: m002
+Successfully parsed features: 'hopper,h100,80g'
+Successfully parsed CfgTRES: cpu=64,mem=1031642M,billing=323,gres/gpu=4
+Successfully parsed AllocTRES: cpu=24,mem=256G,gres/gpu=4
+Successfully parsed node: Node { node_name: "m002", gpu_type: Some(H100), gpu_count: 4, gpu_available: 0, cpu_count: 64, cpu_available: 40, mem_count: 1008, mem_available: 752 }
+Attempting to parse node...
+Successfully parsed node name: n001
+Successfully parsed features: 'hopper,h100,80g'
+Successfully parsed CfgTRES: cpu=64,mem=1031642M,billing=323,gres/gpu=4
+Successfully parsed AllocTRES: cpu=24,mem=256G,gres/gpu=4
+Successfully parsed node: Node { node_name: "n001", gpu_type: Some(H100), gpu_count: 4, gpu_available: 0, cpu_count: 64, cpu_available: 40, mem_count: 1008, mem_available: 752 }
+Found 23 nodes
+Parsed node: Node { node_name: "g002", gpu_type: Some(A100_48), gpu_count: 4, gpu_available: 0, cpu_count: 64, cpu_available: 62, mem_count: 504, mem_available: 424 }
+Parsed node: Node { node_name: "g003", gpu_type: Some(A40), gpu_count: 4, gpu_available: 0, cpu_count: 64, cpu_available: 48, mem_count: 504, mem_available: 404 }
+Parsed node: Node { node_name: "g004", gpu_type: Some(A40), gpu_count: 4, gpu_available: 0, cpu_count: 64, cpu_available: 32, mem_count: 504, mem_available: 184 }
+Parsed node: Node { node_name: "g005", gpu_type: Some(A40), gpu_count: 4, gpu_available: 0, cpu_count: 64, cpu_available: 32, mem_count: 504, mem_available: 184 }
+Parsed node: Node { node_name: "g006", gpu_type: Some(A40), gpu_count: 4, gpu_available: 0, cpu_count: 64, cpu_available: 32, mem_count: 504, mem_available: 184 }
+Parsed node: Node { node_name: "g007", gpu_type: Some(A40), gpu_count: 4, gpu_available: 0, cpu_count: 64, cpu_available: 32, mem_count: 504, mem_available: 344 }
+Parsed node: Node { node_name: "g008", gpu_type: Some(A40), gpu_count: 4, gpu_available: 0, cpu_count: 64, cpu_available: 32, mem_count: 504, mem_available: 344 }
+Parsed node: Node { node_name: "g009", gpu_type: Some(A40), gpu_count: 4, gpu_available: 0, cpu_count: 64, cpu_available: 32, mem_count: 504, mem_available: 344 }
+Parsed node: Node { node_name: "h001", gpu_type: Some(A100_80), gpu_count: 4, gpu_available: 0, cpu_count: 64, cpu_available: 32, mem_count: 504, mem_available: 184 }
+Parsed node: Node { node_name: "h002", gpu_type: Some(A100_80), gpu_count: 4, gpu_available: 3, cpu_count: 64, cpu_available: 48, mem_count: 504, mem_available: 472 }
+Parsed node: Node { node_name: "i001-ds", gpu_type: Some(A100_80), gpu_count: 8, gpu_available: 0, cpu_count: 64, cpu_available: 26, mem_count: 504, mem_available: 278 }
+Parsed node: Node { node_name: "j001-ds", gpu_type: Some(A100_80), gpu_count: 8, gpu_available: 0, cpu_count: 32, cpu_available: 10, mem_count: 1008, mem_available: 94 }
+Parsed node: Node { node_name: "j002-ds", gpu_type: Some(A100_80), gpu_count: 8, gpu_available: 1, cpu_count: 32, cpu_available: 14, mem_count: 1008, mem_available: 394 }
+Parsed node: Node { node_name: "j003-ds", gpu_type: Some(A100_80), gpu_count: 8, gpu_available: 0, cpu_count: 32, cpu_available: 15, mem_count: 1008, mem_available: 800 }
+Parsed node: Node { node_name: "j004-ds", gpu_type: Some(A100_80), gpu_count: 8, gpu_available: 0, cpu_count: 32, cpu_available: 15, mem_count: 1008, mem_available: 800 }
+Parsed node: Node { node_name: "j005-ds", gpu_type: Some(A100_80), gpu_count: 8, gpu_available: 1, cpu_count: 32, cpu_available: 13, mem_count: 1008, mem_available: 818 }
+Parsed node: Node { node_name: "k001", gpu_type: Some(L40), gpu_count: 4, gpu_available: 0, cpu_count: 96, cpu_available: 64, mem_count: 1008, mem_available: 761 }
+Parsed node: Node { node_name: "k002", gpu_type: Some(L40), gpu_count: 4, gpu_available: 0, cpu_count: 96, cpu_available: 64, mem_count: 1008, mem_available: 761 }
+Parsed node: Node { node_name: "k003", gpu_type: Some(L40), gpu_count: 4, gpu_available: 0, cpu_count: 96, cpu_available: 64, mem_count: 1008, mem_available: 761 }
+Parsed node: Node { node_name: "l001", gpu_type: Some(H100), gpu_count: 4, gpu_available: 0, cpu_count: 96, cpu_available: 64, mem_count: 1008, mem_available: 761 }
+Parsed node: Node { node_name: "m001", gpu_type: Some(H100), gpu_count: 4, gpu_available: 0, cpu_count: 64, cpu_available: 40, mem_count: 1008, mem_available: 752 }
+Parsed node: Node { node_name: "m002", gpu_type: Some(H100), gpu_count: 4, gpu_available: 0, cpu_count: 64, cpu_available: 40, mem_count: 1008, mem_available: 752 }
+Parsed node: Node { node_name: "n001", gpu_type: Some(H100), gpu_count: 4, gpu_available: 0, cpu_count: 64, cpu_available: 40, mem_count: 1008, mem_available: 752 }
