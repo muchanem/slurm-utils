@@ -266,6 +266,23 @@ fn max_avail_alloc(nodes: &[Node]) -> Vec<(String, GPUType, ResourceAllocation)>
 }
 
 fn main() {
+    // Parse command line arguments
+    let args: Vec<String> = std::env::args().collect();
+    let filter_gpu_type: Option<GPUType> = args
+        .iter()
+        .find(|arg| arg.starts_with("-get="))
+        .and_then(|arg| {
+            let gpu_type_str = arg.strip_prefix("-get=")?;
+            match gpu_type_str {
+                "A100_80" => Some(GPUType::A100_80),
+                "A100_48" => Some(GPUType::A100_48),
+                "H100" => Some(GPUType::H100),
+                "L40" => Some(GPUType::L40),
+                "A40" => Some(GPUType::A40),
+                _ => None,
+            }
+        });
+
     let mut buffer = String::new();
     match io::stdin().read_to_string(&mut buffer) {
         Ok(_) => {
@@ -276,13 +293,15 @@ fn main() {
             println!("\nMaximum allocations by limiting condition and GPU type:");
 
             for (condition, gpu_type, alloc) in maxima {
-                println!(
-                    "\nWhen optimizing for {}, {:?} node maximum allocation:",
-                    condition, gpu_type
-                );
-                println!("  GPUs available: {}", alloc.gpu_available);
-                println!("  CPU cores available: {}", alloc.cpu_available);
-                println!("  Memory available (GB): {}", alloc.mem_available);
+                if filter_gpu_type.is_none() || filter_gpu_type.as_ref() == Some(&gpu_type) {
+                    println!(
+                        "\nWhen optimizing for {}, {:?} node maximum allocation:",
+                        condition, gpu_type
+                    );
+                    println!("  GPUs available: {}", alloc.gpu_available);
+                    println!("  CPU cores available: {}", alloc.cpu_available);
+                    println!("  Memory available (GB): {}", alloc.mem_available);
+                }
             }
         }
         Err(e) => {
