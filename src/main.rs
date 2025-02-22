@@ -415,8 +415,9 @@ fn main() {
                             gpu_type.map_or("".to_string(), |t| format!(" on {:?}", t))
                         );
                         println!("  GPUs available: {}", alloc.gpu_available);
+                        println!("  GPU Memory available (GB): {}", alloc.gpu_memory);
                         println!("  CPU cores available: {}", alloc.cpu_available);
-                        println!("  Memory available (GB): {}", alloc.mem_available);
+                        println!("  System Memory available (GB): {}", alloc.mem_available);
                     }
                 }
                 None => {
