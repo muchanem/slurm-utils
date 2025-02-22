@@ -211,20 +211,79 @@ fn parse_nodes(input: &str) -> Vec<Node> {
     nodes
 }
 
+#[derive(Debug)]
+struct ResourceAllocation {
+    gpu_available: u32,
+    cpu_available: u32,
+    mem_available: u32,
+}
+
+fn max_avail_alloc(nodes: &[Node]) -> Vec<(String, GPUType, ResourceAllocation)> {
+    use std::collections::HashMap;
+    let mut results = Vec::new();
+
+    // For each limiting condition
+    for condition in ["GPU", "CPU", "Memory"].iter() {
+        // Find max for each GPU type under this condition
+        for gpu_type in [
+            GPUType::A100_80,
+            GPUType::A100_48,
+            GPUType::H100,
+            GPUType::L40,
+            GPUType::A40,
+        ]
+        .iter()
+        {
+            // Find the node with max resources for this condition and GPU type
+            let max_node = nodes
+                .iter()
+                .filter(|node| node.gpu_type.as_ref() == Some(gpu_type))
+                .max_by_key(|node| match *condition {
+                    "GPU" => node.gpu_available,
+                    "CPU" => node.cpu_available,
+                    "Memory" => node.mem_available,
+                    _ => unreachable!(),
+                });
+
+            if let Some(node) = max_node {
+                results.push((
+                    condition.to_string(),
+                    gpu_type.clone(),
+                    ResourceAllocation {
+                        gpu_available: node.gpu_available,
+                        cpu_available: node.cpu_available,
+                        mem_available: node.mem_available,
+                    },
+                ));
+            }
+        }
+    }
+
+    results
+}
+
 fn main() {
-    // Read from stdin
     let mut buffer = String::new();
     match io::stdin().read_to_string(&mut buffer) {
         Ok(_) => {
             let nodes = parse_nodes(&buffer);
             println!("Found {} nodes", nodes.len());
-            for node in nodes {
-                println!("Parsed node: {:?}", node);
+
+            let maxima = max_avail_alloc(&nodes);
+            println!("\nMaximum allocations by limiting condition and GPU type:");
+
+            for (condition, gpu_type, alloc) in maxima {
+                println!(
+                    "\nWhen optimizing for {}, {:?} node maximum allocation:",
+                    condition, gpu_type
+                );
+                println!("  GPUs available: {}", alloc.gpu_available);
+                println!("  CPU cores available: {}", alloc.cpu_available);
+                println!("  Memory available (GB): {}", alloc.mem_available);
             }
         }
         Err(e) => {
             eprintln!("Error reading from stdin: {}", e);
-            std::process::exit(1);
         }
     }
 }
