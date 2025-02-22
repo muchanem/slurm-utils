@@ -11,7 +11,7 @@ use nom::{
 };
 use std::io::{self, Read};
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone)] // Add Clone here
 enum GPUType {
     A100_80, // 'ampere,a100,80g'
     A100_48, // 'ampere,a40,48g'
@@ -225,6 +225,7 @@ fn max_avail_alloc(nodes: &[Node]) -> Vec<(String, GPUType, ResourceAllocation)>
     // For each limiting condition
     for condition in ["GPU", "CPU", "Memory"].iter() {
         // Find max for each GPU type under this condition
+        // Create the array without references
         for gpu_type in [
             GPUType::A100_80,
             GPUType::A100_48,
@@ -233,11 +234,13 @@ fn max_avail_alloc(nodes: &[Node]) -> Vec<(String, GPUType, ResourceAllocation)>
             GPUType::A40,
         ]
         .iter()
+        .cloned()
         {
+            // Use cloned() to get owned values
             // Find the node with max resources for this condition and GPU type
             let max_node = nodes
                 .iter()
-                .filter(|node| node.gpu_type.as_ref() == Some(gpu_type))
+                .filter(|node| node.gpu_type.as_ref() == Some(&gpu_type))
                 .max_by_key(|node| match *condition {
                     "GPU" => node.gpu_available,
                     "CPU" => node.cpu_available,
@@ -248,7 +251,7 @@ fn max_avail_alloc(nodes: &[Node]) -> Vec<(String, GPUType, ResourceAllocation)>
             if let Some(node) = max_node {
                 results.push((
                     condition.to_string(),
-                    gpu_type.clone(),
+                    gpu_type, // Now we can use gpu_type directly
                     ResourceAllocation {
                         gpu_available: node.gpu_available,
                         cpu_available: node.cpu_available,
