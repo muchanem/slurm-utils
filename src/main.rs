@@ -14,7 +14,7 @@ use std::io::{self, Read};
 #[derive(Debug, PartialEq, Clone)] // Add Clone here
 enum GPUType {
     A100_80, // 'ampere,a100,80g'
-    A100_48, // 'ampere,a40,48g'
+    A100_48, // 'ampere,a100,48g'
     H100,    // 'hopper,h100,80g'
     L40,     // 'ampere,l40s,48g'
     A40,     // 'ampere,a40,48g'
@@ -31,6 +31,19 @@ impl GPUType {
             "ampere,a40,48g" => Some(GPUType::A40),
             _ => None,
         }
+    }
+    fn memory_size(&self) -> u32 {
+        match self {
+            GPUType::A100_80 => 80,
+            GPUType::A100_48 => 48,
+            GPUType::H100 => 80,
+            GPUType::L40 => 48,
+            GPUType::A40 => 48,
+        }
+    }
+
+    fn total_gpu_memory(&self, gpu_count: u32) -> u32 {
+        self.memory_size() * gpu_count
     }
 }
 
@@ -118,49 +131,67 @@ fn find_next_node(input: &str) -> Option<(usize, usize)> {
     Some((start, end))
 }
 
-fn parse_single_node(input: &str) -> Option<(Node, &str)> {
-    println!("Attempting to parse node...");
+fn parse_single_node(input: &str, verbose: bool) -> Option<(Node, &str)> {
+    if verbose {
+        println!("Attempting to parse node...");
+    }
 
     let (remaining, node_name) = match parse_node_name(input) {
         Ok(result) => {
-            println!("Successfully parsed node name: {}", result.1);
+            if verbose {
+                println!("Successfully parsed node name: {}", result.1);
+            }
             result
         }
         Err(e) => {
-            println!("Failed to parse node name: {:?}", e);
+            if verbose {
+                println!("Failed to parse node name: {:?}", e);
+            }
             return None;
         }
     };
 
     let (remaining, features) = match parse_available_features(remaining) {
         Ok(result) => {
-            println!("Successfully parsed features: {}", result.1);
+            if verbose {
+                println!("Successfully parsed features: {}", result.1);
+            }
             result
         }
         Err(e) => {
-            println!("Failed to parse features: {:?}", e);
+            if verbose {
+                println!("Failed to parse features: {:?}", e);
+            }
             return None;
         }
     };
 
     let (remaining, cfg_tres) = match parse_cfg_tres(remaining) {
         Ok(result) => {
-            println!("Successfully parsed CfgTRES: {}", result.1);
+            if verbose {
+                println!("Successfully parsed CfgTRES: {}", result.1);
+            }
             result
         }
         Err(e) => {
-            println!("Failed to parse CfgTRES: {:?}", e);
+            if verbose {
+                println!("Failed to parse CfgTRES: {:?}", e);
+            }
             return None;
         }
     };
 
     let (remaining, alloc_tres) = match parse_alloc_tres(remaining) {
         Ok(result) => {
-            println!("Successfully parsed AllocTRES: {}", result.1);
+            if verbose {
+                println!("Successfully parsed AllocTRES: {}", result.1);
+            }
             result
         }
         Err(e) => {
-            println!("Failed to parse AllocTRES: {:?}", e);
+            if verbose {
+                println!("Failed to parse AllocTRES: {:?}", e);
+            }
             return None;
         }
     };
@@ -183,23 +214,27 @@ fn parse_single_node(input: &str) -> Option<(Node, &str)> {
         mem_available: mem_count.saturating_sub(mem_alloc),
     };
 
-    println!("Successfully parsed node: {:?}", node);
+    if verbose {
+        println!("Successfully parsed node: {:?}", node);
+    }
     Some((node, remaining))
 }
 
-fn parse_nodes(input: &str) -> Vec<Node> {
+fn parse_nodes(input: &str, verbose: bool) -> Vec<Node> {
     let mut nodes = Vec::new();
     let mut current_pos = 0;
 
     while current_pos < input.len() {
         if let Some((start, end)) = find_next_node(&input[current_pos..]) {
             let node_str = &input[current_pos + start..current_pos + end];
-            match parse_single_node(node_str) {
+            match parse_single_node(node_str, verbose) {
                 Some((node, _)) => {
                     nodes.push(node);
                 }
                 None => {
-                    println!("Failed to parse node: {}", node_str);
+                    if verbose {
+                        println!("Failed to parse node: {}", node_str);
+                    }
                 }
             }
             current_pos += end;
@@ -214,46 +249,122 @@ fn parse_nodes(input: &str) -> Vec<Node> {
 #[derive(Debug)]
 struct ResourceAllocation {
     gpu_available: u32,
+    gpu_memory: u32, // Total GPU memory in GB
     cpu_available: u32,
     mem_available: u32,
 }
 
-fn max_avail_alloc(nodes: &[Node]) -> Vec<(String, GPUType, ResourceAllocation)> {
-    use std::collections::HashMap;
+#[derive(Debug)]
+enum OptimizationTarget {
+    GPUType(GPUType), // Optimize for specific GPU type with min 1 GPU
+    CPU,              // Optimize for CPU across all nodes
+    Memory,           // Optimize for system memory across all nodes
+    GPUMem,           // Optimize for GPU memory across all nodes
+}
+
+fn max_avail_alloc(
+    nodes: &[Node],
+    target: &OptimizationTarget,
+) -> Vec<(String, Option<GPUType>, ResourceAllocation)> {
     let mut results = Vec::new();
 
-    // For each limiting condition
-    for condition in ["GPU", "CPU", "Memory"].iter() {
-        // Find max for each GPU type under this condition
-        // Create the array without references
-        for gpu_type in [
-            GPUType::A100_80,
-            GPUType::A100_48,
-            GPUType::H100,
-            GPUType::L40,
-            GPUType::A40,
-        ]
-        .iter()
-        .cloned()
-        {
-            // Use cloned() to get owned values
-            // Find the node with max resources for this condition and GPU type
-            let max_node = nodes
-                .iter()
-                .filter(|node| node.gpu_type.as_ref() == Some(&gpu_type))
-                .max_by_key(|node| match *condition {
-                    "GPU" => node.gpu_available,
-                    "CPU" => node.cpu_available,
-                    "Memory" => node.mem_available,
-                    _ => unreachable!(),
-                });
+    match target {
+        OptimizationTarget::GPUType(gpu_type) => {
+            // For each limiting condition
+            for condition in ["GPU", "CPU", "Memory"].iter() {
+                // Filter nodes of specified type with at least 1 GPU available
+                let max_node = nodes
+                    .iter()
+                    .filter(|node| {
+                        node.gpu_type.as_ref() == Some(gpu_type) && node.gpu_available > 0
+                    })
+                    .max_by_key(|node| match *condition {
+                        "GPU" => node.gpu_available,
+                        "CPU" => node.cpu_available,
+                        "Memory" => node.mem_available,
+                        _ => unreachable!(),
+                    });
 
-            if let Some(node) = max_node {
+                if let Some(node) = max_node {
+                    results.push((
+                        condition.to_string(),
+                        Some(gpu_type.clone()),
+                        ResourceAllocation {
+                            gpu_available: node.gpu_available,
+                            gpu_memory: gpu_type.total_gpu_memory(node.gpu_available),
+                            cpu_available: node.cpu_available,
+                            mem_available: node.mem_available,
+                        },
+                    ));
+                }
+            }
+        }
+        OptimizationTarget::CPU => {
+            // Find node with maximum available CPUs
+            if let Some(node) = nodes.iter().max_by_key(|node| node.cpu_available) {
+                let gpu_memory = node
+                    .gpu_type
+                    .as_ref()
+                    .map(|gt| gt.total_gpu_memory(node.gpu_available))
+                    .unwrap_or(0);
+
                 results.push((
-                    condition.to_string(),
-                    gpu_type, // Now we can use gpu_type directly
+                    "CPU".to_string(),
+                    node.gpu_type.clone(),
                     ResourceAllocation {
                         gpu_available: node.gpu_available,
+                        gpu_memory,
+                        cpu_available: node.cpu_available,
+                        mem_available: node.mem_available,
+                    },
+                ));
+            }
+        }
+        OptimizationTarget::Memory => {
+            // Find node with maximum available memory
+            if let Some(node) = nodes.iter().max_by_key(|node| node.mem_available) {
+                let gpu_memory = node
+                    .gpu_type
+                    .as_ref()
+                    .map(|gt| gt.total_gpu_memory(node.gpu_available))
+                    .unwrap_or(0);
+
+                results.push((
+                    "Memory".to_string(),
+                    node.gpu_type.clone(),
+                    ResourceAllocation {
+                        gpu_available: node.gpu_available,
+                        gpu_memory,
+                        cpu_available: node.cpu_available,
+                        mem_available: node.mem_available,
+                    },
+                ));
+            }
+        }
+        OptimizationTarget::GPUMem => {
+            // Find node with maximum total GPU memory
+            if let Some(node) = nodes
+                .iter()
+                .filter(|node| node.gpu_type.is_some())
+                .max_by_key(|node| {
+                    node.gpu_type
+                        .as_ref()
+                        .map(|gt| gt.total_gpu_memory(node.gpu_available))
+                        .unwrap_or(0)
+                })
+            {
+                let gpu_memory = node
+                    .gpu_type
+                    .as_ref()
+                    .map(|gt| gt.total_gpu_memory(node.gpu_available))
+                    .unwrap_or(0);
+
+                results.push((
+                    "GPUMem".to_string(),
+                    node.gpu_type.clone(),
+                    ResourceAllocation {
+                        gpu_available: node.gpu_available,
+                        gpu_memory,
                         cpu_available: node.cpu_available,
                         mem_available: node.mem_available,
                     },
@@ -266,41 +377,71 @@ fn max_avail_alloc(nodes: &[Node]) -> Vec<(String, GPUType, ResourceAllocation)>
 }
 
 fn main() {
-    // Parse command line arguments
     let args: Vec<String> = std::env::args().collect();
-    let filter_gpu_type: Option<GPUType> = args
+    let optimization_target: Option<OptimizationTarget> = args
         .iter()
         .find(|arg| arg.starts_with("-get="))
         .and_then(|arg| {
-            let gpu_type_str = arg.strip_prefix("-get=")?;
-            match gpu_type_str {
-                "A100_80" => Some(GPUType::A100_80),
-                "A100_48" => Some(GPUType::A100_48),
-                "H100" => Some(GPUType::H100),
-                "L40" => Some(GPUType::L40),
-                "A40" => Some(GPUType::A40),
+            let target_str = arg.strip_prefix("-get=")?;
+            match target_str {
+                "A100_80" => Some(OptimizationTarget::GPUType(GPUType::A100_80)),
+                "A100_48" => Some(OptimizationTarget::GPUType(GPUType::A100_48)),
+                "H100" => Some(OptimizationTarget::GPUType(GPUType::H100)),
+                "L40" => Some(OptimizationTarget::GPUType(GPUType::L40)),
+                "A40" => Some(OptimizationTarget::GPUType(GPUType::A40)),
+                "CPU" => Some(OptimizationTarget::CPU),
+                "Memory" => Some(OptimizationTarget::Memory),
+                "GPUMem" => Some(OptimizationTarget::GPUMem),
                 _ => None,
             }
         });
 
+    // Only print parsing debug messages if no command line flag is passed.
+    let verbose = optimization_target.is_none();
+
     let mut buffer = String::new();
     match io::stdin().read_to_string(&mut buffer) {
         Ok(_) => {
-            let nodes = parse_nodes(&buffer);
+            let nodes = parse_nodes(&buffer, verbose);
             println!("Found {} nodes", nodes.len());
 
-            let maxima = max_avail_alloc(&nodes);
-            println!("\nMaximum allocations by limiting condition and GPU type:");
-
-            for (condition, gpu_type, alloc) in maxima {
-                if filter_gpu_type.is_none() || filter_gpu_type.as_ref() == Some(&gpu_type) {
-                    println!(
-                        "\nWhen optimizing for {}, {:?} node maximum allocation:",
-                        condition, gpu_type
-                    );
-                    println!("  GPUs available: {}", alloc.gpu_available);
-                    println!("  CPU cores available: {}", alloc.cpu_available);
-                    println!("  Memory available (GB): {}", alloc.mem_available);
+            match optimization_target {
+                Some(target) => {
+                    let maxima = max_avail_alloc(&nodes, &target);
+                    for (condition, gpu_type, alloc) in maxima {
+                        println!(
+                            "\nWhen optimizing for {}, maximum allocation{}: ",
+                            condition,
+                            gpu_type.map_or("".to_string(), |t| format!(" on {:?}", t))
+                        );
+                        println!("  GPUs available: {}", alloc.gpu_available);
+                        println!("  CPU cores available: {}", alloc.cpu_available);
+                        println!("  Memory available (GB): {}", alloc.mem_available);
+                    }
+                }
+                None => {
+                    // Show all GPU types
+                    for gpu_type in [
+                        GPUType::A100_80,
+                        GPUType::A100_48,
+                        GPUType::H100,
+                        GPUType::L40,
+                        GPUType::A40,
+                    ]
+                    .iter()
+                    {
+                        let maxima =
+                            max_avail_alloc(&nodes, &OptimizationTarget::GPUType(gpu_type.clone()));
+                        for (condition, _, alloc) in maxima {
+                            println!(
+                                "\nWhen optimizing for {} on {:?} node maximum allocation:",
+                                condition, gpu_type
+                            );
+                            println!("  GPUs available: {}", alloc.gpu_available);
+                            println!("  CPU cores available: {}", alloc.cpu_available);
+                            println!("  Memory available (GB): {}", alloc.mem_available);
+                        }
+                    }
                 }
             }
         }
